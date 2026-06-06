@@ -1,0 +1,548 @@
+/* ═══════════════════════════════════════════
+   BLOOMDORO — Animations & Garden Entities
+═══════════════════════════════════════════ */
+
+/* ── Keyframes ── */
+@keyframes float-up {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
+@keyframes sway {
+  0%, 100% { transform-origin: bottom center; transform: rotate(-3deg); }
+  50%       { transform-origin: bottom center; transform: rotate(3deg); }
+}
+@keyframes bloom {
+  0%   { transform: scale(0) rotate(-20deg); opacity: 0; }
+  60%  { transform: scale(1.15) rotate(5deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+@keyframes grow-up {
+  from { transform: scaleY(0); transform-origin: bottom center; opacity: 0; }
+  to   { transform: scaleY(1); transform-origin: bottom center; opacity: 1; }
+}
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0); }
+  50%       { opacity: 1; transform: scale(1); }
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(124,58,237,0.3); }
+  50%       { box-shadow: 0 0 40px rgba(124,58,237,0.7), 0 0 80px rgba(124,58,237,0.2); }
+}
+@keyframes dot-pulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(124,58,237,0.6); }
+  50%       { transform: scale(1.2); box-shadow: 0 0 0 4px rgba(124,58,237,0); }
+}
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(30px) scale(0.95); }
+  to   { opacity: 1; transform: translateX(0) scale(1); }
+}
+@keyframes modal-in {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes blink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  95%            { transform: scaleY(0.1); }
+}
+@keyframes tail-wag {
+  0%, 100% { transform: rotate(-15deg); }
+  50%       { transform: rotate(15deg); }
+}
+@keyframes crystal-spin {
+  from { transform: rotateY(0deg); }
+  to   { transform: rotateY(360deg); }
+}
+@keyframes leaf-rustle {
+  0%, 100% { transform: rotate(-2deg) scale(1); }
+  50%       { transform: rotate(2deg) scale(1.02); }
+}
+@keyframes petal-fall {
+  0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(60px) rotate(180deg); opacity: 0; }
+}
+@keyframes star-twinkle {
+  0%, 100% { opacity: 0.2; transform: scale(0.8); }
+  50%       { opacity: 1; transform: scale(1.2); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* ════════════════════════════════
+   SHARED ENTITY WRAPPER
+════════════════════════════════ */
+.entity-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  animation: float-up 4s ease-in-out infinite;
+}
+
+/* ════════════════════════════════
+   FLOWER ENTITY
+════════════════════════════════ */
+.flower-entity { position: relative; }
+
+/* Stem */
+.flower-stem {
+  width: 6px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #2d8a3e, #1a5c28);
+  transform-origin: bottom center;
+  animation: sway 3s ease-in-out infinite, grow-up 1.2s ease-out both;
+}
+
+/* Leaf */
+.flower-leaf {
+  position: absolute;
+  width: 22px;
+  height: 12px;
+  border-radius: 50% 0 50% 0;
+  background: linear-gradient(135deg, #3a9f50, #1f6e30);
+  transform-origin: left center;
+  animation: leaf-rustle 3s ease-in-out infinite;
+}
+.flower-leaf.left  { left: -20px; bottom: 35%; transform: rotate(-30deg); }
+.flower-leaf.right { right: -20px; bottom: 55%; transform: rotate(30deg) scaleX(-1); }
+
+/* Petals */
+.flower-head {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: bloom 0.8s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+.petal {
+  position: absolute;
+  border-radius: 50% 50% 0 50%;
+  transform-origin: bottom center;
+}
+.flower-center {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fbbf24, #f59e0b);
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 0 10px rgba(251,191,36,0.5);
+}
+
+/* Growth stage sizes */
+.flower-stage-0 .flower-stem { height: 20px; }
+.flower-stage-0 .flower-head { width: 12px; height: 12px; }
+.flower-stage-0 .flower-center { width: 12px; height: 12px; }
+.flower-stage-0 .petal { display: none; }
+
+.flower-stage-1 .flower-stem { height: 60px; }
+.flower-stage-1 .flower-head { width: 40px; height: 40px; }
+.flower-stage-1 .petal {
+  width: 14px; height: 20px;
+  background: linear-gradient(180deg, #f9a8d4, #ec4899);
+}
+
+.flower-stage-2 .flower-stem { height: 90px; }
+.flower-stage-2 .flower-head { width: 70px; height: 70px; }
+.flower-stage-2 .petal {
+  width: 20px; height: 30px;
+  background: linear-gradient(180deg, #fbcfe8, #f472b6);
+}
+
+.flower-stage-3 .flower-stem { height: 120px; }
+.flower-stage-3 .flower-head { width: 100px; height: 100px; }
+.flower-stage-3 .flower-center { width: 22px; height: 22px; }
+.flower-stage-3 .petal {
+  width: 26px; height: 40px;
+  background: linear-gradient(180deg, #fce7f3, #ec4899);
+  filter: drop-shadow(0 0 4px rgba(236,72,153,0.4));
+}
+
+.flower-stage-4 .flower-stem { height: 150px; }
+.flower-stage-4 .flower-head { width: 130px; height: 130px; }
+.flower-stage-4 .flower-center { width: 26px; height: 26px; }
+.flower-stage-4 .petal {
+  width: 32px; height: 50px;
+  background: linear-gradient(180deg, #fdf2f8, #f472b6);
+  filter: drop-shadow(0 0 6px rgba(244,114,182,0.5));
+}
+.flower-stage-4 .flower-leaf { width: 30px; height: 16px; }
+
+/* ════════════════════════════════
+   TREE / FOREST ENTITY
+════════════════════════════════ */
+.tree-entity { position: relative; }
+.tree-trunk {
+  background: linear-gradient(180deg, #8B5E3C, #6B4226);
+  border-radius: 4px;
+  margin: 0 auto;
+  animation: grow-up 1s ease-out both;
+}
+.tree-foliage {
+  position: absolute;
+  border-radius: 50% 50% 45% 45%;
+  background: linear-gradient(180deg, #22c55e, #16a34a);
+  left: 50%;
+  transform: translateX(-50%);
+  animation: bloom 0.9s cubic-bezier(0.34,1.56,0.64,1) both, leaf-rustle 4s ease-in-out infinite;
+  box-shadow: 0 0 20px rgba(34,197,94,0.3);
+}
+.tree-foliage-2 {
+  position: absolute;
+  border-radius: 50% 50% 45% 45%;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: leaf-rustle 3.5s ease-in-out infinite 0.2s;
+}
+
+.tree-stage-0 .tree-trunk { width: 8px; height: 24px; }
+.tree-stage-0 .tree-foliage { width: 20px; height: 20px; bottom: 20px; background: #4ade80; }
+
+.tree-stage-1 .tree-trunk { width: 12px; height: 60px; }
+.tree-stage-1 .tree-foliage { width: 55px; height: 55px; bottom: 50px; }
+
+.tree-stage-2 .tree-trunk { width: 16px; height: 90px; }
+.tree-stage-2 .tree-foliage { width: 90px; height: 80px; bottom: 70px; }
+.tree-stage-2 .tree-foliage-2 { width: 60px; height: 55px; bottom: 108px; background: linear-gradient(180deg,#4ade80,#22c55e); }
+
+.tree-stage-3 .tree-trunk { width: 20px; height: 120px; }
+.tree-stage-3 .tree-foliage { width: 120px; height: 100px; bottom: 95px; }
+.tree-stage-3 .tree-foliage-2 { width: 80px; height: 75px; bottom: 155px; background: linear-gradient(180deg,#4ade80,#22c55e); }
+
+.tree-stage-4 .tree-trunk { width: 26px; height: 155px; }
+.tree-stage-4 .tree-foliage { width: 160px; height: 130px; bottom: 120px; box-shadow: 0 0 30px rgba(34,197,94,0.4); }
+.tree-stage-4 .tree-foliage-2 { width: 110px; height: 95px; bottom: 205px; background: linear-gradient(180deg,#86efac,#4ade80); }
+
+/* ════════════════════════════════
+   CACTUS ENTITY
+════════════════════════════════ */
+.cactus-entity { position: relative; display: flex; flex-direction: column; align-items: center; }
+.cactus-body {
+  background: linear-gradient(180deg, #4ade80, #15803d);
+  border-radius: 40px 40px 12px 12px;
+  position: relative;
+  animation: grow-up 1s ease-out both;
+}
+.cactus-arm {
+  position: absolute;
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+  border-radius: 20px;
+  animation: bloom 1s cubic-bezier(0.34,1.56,0.64,1) 0.4s both;
+}
+.cactus-arm.left  { right: 100%; top: 25%; border-radius: 20px 0 0 20px; }
+.cactus-arm.right { left: 100%;  top: 25%; border-radius: 0 20px 20px 0; }
+.cactus-flower {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 20px;
+  animation: bloom 0.8s cubic-bezier(0.34,1.56,0.64,1) 0.8s both;
+}
+.cactus-spines { position: absolute; inset: 0; }
+.spine {
+  position: absolute;
+  width: 2px;
+  background: #bbf7d0;
+  border-radius: 1px;
+  transform-origin: bottom center;
+}
+
+.cactus-stage-0 .cactus-body  { width: 18px; height: 28px; }
+.cactus-stage-0 .cactus-arm   { display: none; }
+.cactus-stage-1 .cactus-body  { width: 26px; height: 60px; }
+.cactus-stage-1 .cactus-arm   { width: 18px; height: 10px; }
+.cactus-stage-2 .cactus-body  { width: 34px; height: 90px; }
+.cactus-stage-2 .cactus-arm   { width: 28px; height: 14px; }
+.cactus-stage-3 .cactus-body  { width: 44px; height: 120px; }
+.cactus-stage-3 .cactus-arm   { width: 38px; height: 18px; }
+.cactus-stage-4 .cactus-body  { width: 56px; height: 155px; box-shadow: 0 0 20px rgba(74,222,128,0.3); }
+.cactus-stage-4 .cactus-arm   { width: 50px; height: 22px; }
+
+/* ════════════════════════════════
+   CAT PET ENTITY
+════════════════════════════════ */
+.cat-entity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  animation: float-up 3.5s ease-in-out infinite;
+}
+.cat-body {
+  position: relative;
+  background: linear-gradient(180deg, #c4b5fd, #8b5cf6);
+  border-radius: 50% 50% 40% 40%;
+  animation: bloom 0.7s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+.cat-head {
+  position: relative;
+  background: linear-gradient(180deg, #ddd6fe, #a78bfa);
+  border-radius: 50%;
+  margin-top: -8px;
+}
+.cat-ear {
+  position: absolute;
+  top: -10px;
+  width: 0;
+  height: 0;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-bottom: 18px solid #a78bfa;
+}
+.cat-ear.left  { left: 5px; }
+.cat-ear.right { right: 5px; }
+.cat-eye {
+  position: absolute;
+  top: 38%;
+  width: 12px;
+  height: 12px;
+  background: #1e1b4b;
+  border-radius: 50%;
+  animation: blink 4s ease-in-out infinite;
+}
+.cat-eye.left  { left: 22%; }
+.cat-eye.right { right: 22%; }
+.cat-eye::after {
+  content: '';
+  position: absolute;
+  width: 4px; height: 4px;
+  background: #fff;
+  border-radius: 50%;
+  top: 1px; left: 2px;
+}
+.cat-nose {
+  position: absolute;
+  top: 54%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: 6px; height: 4px;
+  background: #f472b6;
+  border-radius: 50%;
+}
+.cat-tail {
+  width: 8px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #a78bfa, #7c3aed);
+  position: absolute;
+  bottom: 0;
+  right: -14px;
+  transform-origin: top center;
+  animation: tail-wag 2s ease-in-out infinite;
+}
+.cat-zz {
+  position: absolute;
+  top: -20px;
+  right: -24px;
+  font-size: 16px;
+  opacity: 0.7;
+  animation: float-up 2s ease-in-out infinite;
+}
+
+.cat-stage-0 .cat-body { width: 30px; height: 24px; }
+.cat-stage-0 .cat-head { width: 28px; height: 28px; }
+.cat-stage-0 .cat-tail { height: 20px; }
+.cat-stage-0 .cat-eye  { width: 8px; height: 8px; }
+
+.cat-stage-1 .cat-body { width: 50px; height: 40px; }
+.cat-stage-1 .cat-head { width: 46px; height: 46px; }
+.cat-stage-1 .cat-tail { height: 32px; }
+
+.cat-stage-2 .cat-body { width: 70px; height: 55px; }
+.cat-stage-2 .cat-head { width: 64px; height: 64px; }
+.cat-stage-2 .cat-tail { height: 46px; width: 10px; }
+
+.cat-stage-3 .cat-body { width: 90px; height: 72px; }
+.cat-stage-3 .cat-head { width: 82px; height: 82px; }
+.cat-stage-3 .cat-tail { height: 58px; width: 12px; }
+
+.cat-stage-4 .cat-body { width: 110px; height: 88px; box-shadow: 0 0 25px rgba(139,92,246,0.4); }
+.cat-stage-4 .cat-head { width: 100px; height: 100px; }
+.cat-stage-4 .cat-ear  { border-bottom-width: 26px; }
+.cat-stage-4 .cat-tail { height: 72px; width: 14px; }
+.cat-stage-4 .cat-eye  { width: 14px; height: 14px; }
+
+/* ════════════════════════════════
+   FOX PET ENTITY
+════════════════════════════════ */
+.fox-entity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: float-up 3.8s ease-in-out infinite 0.3s;
+}
+.fox-body {
+  background: linear-gradient(180deg, #fb923c, #ea580c);
+  border-radius: 50% 50% 35% 35%;
+  position: relative;
+  animation: bloom 0.7s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+.fox-head {
+  background: linear-gradient(180deg, #fdba74, #fb923c);
+  border-radius: 50%;
+  position: relative;
+  margin-top: -6px;
+}
+.fox-ear {
+  position: absolute;
+  top: -12px;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 22px solid #fb923c;
+}
+.fox-ear.left  { left: 4px; }
+.fox-ear.right { right: 4px; }
+.fox-ear::after {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: -5px;
+  width: 0; height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 12px solid #fde68a;
+}
+.fox-snout {
+  position: absolute;
+  bottom: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50%;
+  height: 35%;
+  background: #fef3c7;
+  border-radius: 50%;
+}
+.fox-eye {
+  position: absolute;
+  top: 32%;
+  width: 10px;
+  height: 10px;
+  background: #1c1917;
+  border-radius: 50%;
+  animation: blink 5s ease-in-out infinite 1s;
+}
+.fox-eye.left  { left: 20%; }
+.fox-eye.right { right: 20%; }
+.fox-tail {
+  position: absolute;
+  bottom: -10px;
+  right: -18px;
+  background: linear-gradient(135deg, #fb923c, #fde68a);
+  border-radius: 50% 80% 50% 20%;
+  transform-origin: bottom left;
+  animation: tail-wag 2.2s ease-in-out infinite;
+}
+
+.fox-stage-0 .fox-body { width: 28px; height: 22px; }
+.fox-stage-0 .fox-head { width: 26px; height: 26px; }
+.fox-stage-0 .fox-tail { width: 16px; height: 20px; }
+.fox-stage-1 .fox-body { width: 48px; height: 38px; }
+.fox-stage-1 .fox-head { width: 44px; height: 44px; }
+.fox-stage-1 .fox-tail { width: 24px; height: 30px; }
+.fox-stage-2 .fox-body { width: 68px; height: 54px; }
+.fox-stage-2 .fox-head { width: 62px; height: 62px; }
+.fox-stage-2 .fox-tail { width: 34px; height: 44px; }
+.fox-stage-3 .fox-body { width: 88px; height: 70px; }
+.fox-stage-3 .fox-head { width: 80px; height: 80px; }
+.fox-stage-3 .fox-tail { width: 46px; height: 58px; }
+.fox-stage-4 .fox-body { width: 108px; height: 86px; box-shadow: 0 0 25px rgba(251,146,60,0.4); }
+.fox-stage-4 .fox-head { width: 98px; height: 98px; }
+.fox-stage-4 .fox-tail { width: 60px; height: 72px; }
+
+/* ════════════════════════════════
+   CRYSTAL ENTITY
+════════════════════════════════ */
+.crystal-entity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: float-up 5s ease-in-out infinite;
+}
+.crystal-cluster { position: relative; display: flex; align-items: flex-end; gap: 4px; }
+.crystal-shard {
+  border-radius: 2px 2px 0 0;
+  clip-path: polygon(10% 100%, 0% 30%, 50% 0%, 100% 30%, 90% 100%);
+  animation: bloom 0.7s cubic-bezier(0.34,1.56,0.64,1) both;
+  box-shadow: inset 0 0 10px rgba(255,255,255,0.3);
+}
+
+.crystal-stage-0 .crystal-shard:nth-child(1) { width: 18px; height: 30px; background: linear-gradient(180deg,#c4b5fd,#7c3aed); animation-delay:0s; }
+.crystal-stage-1 .crystal-shard:nth-child(1) { width: 22px; height: 50px; background: linear-gradient(180deg,#ddd6fe,#7c3aed); animation-delay:0s; }
+.crystal-stage-1 .crystal-shard:nth-child(2) { width: 16px; height: 38px; background: linear-gradient(180deg,#a5b4fc,#4f46e5); animation-delay:0.1s; }
+.crystal-stage-2 .crystal-shard:nth-child(1) { width: 28px; height: 75px; background: linear-gradient(180deg,#e0e7ff,#7c3aed); animation-delay:0s; }
+.crystal-stage-2 .crystal-shard:nth-child(2) { width: 20px; height: 55px; background: linear-gradient(180deg,#c7d2fe,#4f46e5); animation-delay:0.1s; }
+.crystal-stage-2 .crystal-shard:nth-child(3) { width: 16px; height: 44px; background: linear-gradient(180deg,#bfdbfe,#3b82f6); animation-delay:0.2s; }
+.crystal-stage-3 .crystal-shard:nth-child(1) { width: 36px; height: 105px; background: linear-gradient(180deg,#ede9fe,#7c3aed); animation-delay:0s; box-shadow: 0 0 20px rgba(124,58,237,0.4); }
+.crystal-stage-3 .crystal-shard:nth-child(2) { width: 26px; height: 80px; background: linear-gradient(180deg,#e0e7ff,#4f46e5); animation-delay:0.1s; }
+.crystal-stage-3 .crystal-shard:nth-child(3) { width: 20px; height: 62px; background: linear-gradient(180deg,#dbeafe,#3b82f6); animation-delay:0.2s; }
+.crystal-stage-3 .crystal-shard:nth-child(4) { width: 14px; height: 46px; background: linear-gradient(180deg,#fae8ff,#a855f7); animation-delay:0.3s; }
+.crystal-stage-4 .crystal-shard:nth-child(1) { width: 44px; height: 140px; background: linear-gradient(180deg,#faf5ff,#7c3aed); animation-delay:0s; box-shadow: 0 0 30px rgba(124,58,237,0.6),inset 0 0 20px rgba(255,255,255,0.2); }
+.crystal-stage-4 .crystal-shard:nth-child(2) { width: 32px; height: 108px; background: linear-gradient(180deg,#ede9fe,#4f46e5); animation-delay:0.1s; box-shadow: 0 0 15px rgba(79,70,229,0.4); }
+.crystal-stage-4 .crystal-shard:nth-child(3) { width: 26px; height: 84px; background: linear-gradient(180deg,#dbeafe,#3b82f6); animation-delay:0.2s; }
+.crystal-stage-4 .crystal-shard:nth-child(4) { width: 18px; height: 62px; background: linear-gradient(180deg,#fae8ff,#a855f7); animation-delay:0.3s; }
+.crystal-stage-4 .crystal-shard:nth-child(5) { width: 14px; height: 48px; background: linear-gradient(180deg,#fce7f3,#ec4899); animation-delay:0.4s; }
+
+/* Crystal sparkles */
+.crystal-sparkle {
+  position: absolute;
+  font-size: 12px;
+  animation: sparkle 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ════════════════════════════════
+   BREAK MODE OVERLAY
+════════════════════════════════ */
+.break-mode .garden-sky {
+  background: radial-gradient(ellipse at 50% 0%, rgba(56,189,248,0.2) 0%, transparent 70%),
+              radial-gradient(ellipse at 80% 20%, rgba(16,185,129,0.12) 0%, transparent 50%);
+}
+.break-mode .ring-progress { stroke: url(#ring-gradient-break); }
+.break-mode .clock-time { text-shadow: 0 0 30px rgba(16,185,129,0.6); }
+.break-mode .mode-tab.active {
+  background: linear-gradient(135deg, var(--emerald), var(--sky));
+}
+
+/* ════════════════════════════════
+   AMBIENT STARS
+════════════════════════════════ */
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background: #fff;
+  animation: star-twinkle var(--dur, 3s) ease-in-out infinite var(--delay, 0s);
+}
+
+/* ════════════════════════════════
+   LEVEL-UP CELEBRATION
+════════════════════════════════ */
+@keyframes level-up-text {
+  0%   { opacity: 0; transform: translate(-50%,-50%) scale(0.5); }
+  30%  { opacity: 1; transform: translate(-50%,-60%) scale(1.2); }
+  70%  { opacity: 1; transform: translate(-50%,-70%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%,-80%) scale(0.9); }
+}
+.level-up-text {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #fbbf24;
+  text-shadow: 0 0 20px rgba(251,191,36,0.8);
+  pointer-events: none;
+  z-index: 10;
+  animation: level-up-text 2s ease-out both;
+  white-space: nowrap;
+}
+
+/* ════════════════════════════════
+   TIMER RUNNING STATE
+════════════════════════════════ */
+.timer-running .clock-wrap {
+  animation: pulse-glow 2s ease-in-out infinite;
+  border-radius: 50%;
+}

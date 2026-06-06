@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bloomdoro — Gamified Focus Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+</head>
+<body>
+  <!-- Particle background -->
+  <canvas id="particle-canvas"></canvas>
+
+  <!-- Settings Modal -->
+  <div id="settings-modal" class="modal hidden">
+    <div class="modal-backdrop" id="settings-backdrop"></div>
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2>Settings</h2>
+        <button class="btn-icon" id="close-settings">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="settings-group">
+          <h3>Timer Durations</h3>
+          <div class="setting-row">
+            <label>Focus <span class="hint">(minutes)</span></label>
+            <input type="number" id="s-focus" min="1" max="90" value="25" />
+          </div>
+          <div class="setting-row">
+            <label>Short Break</label>
+            <input type="number" id="s-short" min="1" max="30" value="5" />
+          </div>
+          <div class="setting-row">
+            <label>Long Break</label>
+            <input type="number" id="s-long" min="5" max="60" value="15" />
+          </div>
+          <div class="setting-row">
+            <label>Sessions before long break</label>
+            <input type="number" id="s-sessions" min="1" max="10" value="4" />
+          </div>
+        </div>
+        <div class="settings-group">
+          <h3>Automation</h3>
+          <div class="setting-row">
+            <label>Auto-start breaks</label>
+            <label class="toggle"><input type="checkbox" id="s-auto-break" /><span class="slider"></span></label>
+          </div>
+          <div class="setting-row">
+            <label>Auto-start focus sessions</label>
+            <label class="toggle"><input type="checkbox" id="s-auto-focus" /><span class="slider"></span></label>
+          </div>
+          <div class="setting-row">
+            <label>Sound alerts</label>
+            <label class="toggle"><input type="checkbox" id="s-sound" checked /><span class="slider"></span></label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-primary" id="save-settings">Save Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Layout -->
+  <div class="app-wrapper">
+
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo">
+        <span class="logo-icon">🌸</span>
+        <span class="logo-text">Bloomdoro</span>
+      </div>
+      <nav class="header-nav">
+        <button class="btn-icon nav-btn" id="open-settings" title="Settings">⚙️</button>
+        <div id="spotify-widget" class="spotify-widget disconnected">
+          <button class="spotify-connect-btn" id="spotify-connect-btn">
+            <svg class="spotify-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+            </svg>
+            Connect Spotify
+          </button>
+          <div class="spotify-player hidden" id="spotify-player">
+            <div class="now-playing">
+              <img id="album-art" src="" alt="album" class="album-art" />
+              <div class="track-info">
+                <span id="track-name" class="track-name">—</span>
+                <span id="track-artist" class="track-artist">—</span>
+              </div>
+            </div>
+            <div class="spotify-controls">
+              <button class="btn-icon" id="sp-prev" title="Previous">⏮</button>
+              <button class="btn-icon sp-play-btn" id="sp-play" title="Play/Pause">⏸</button>
+              <button class="btn-icon" id="sp-next" title="Next">⏭</button>
+              <button class="btn-icon sp-disconnect" id="sp-disconnect" title="Disconnect">✕</button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Theme Selector -->
+    <section class="theme-selector">
+      <h2 class="section-title">What will you grow today?</h2>
+      <div class="theme-cards">
+        <button class="theme-card active" data-theme="flower">
+          <div class="theme-preview flower-preview"></div>
+          <span>Flower</span>
+        </button>
+        <button class="theme-card" data-theme="tree">
+          <div class="theme-preview tree-preview"></div>
+          <span>Forest</span>
+        </button>
+        <button class="theme-card" data-theme="cactus">
+          <div class="theme-preview cactus-preview"></div>
+          <span>Cactus</span>
+        </button>
+        <button class="theme-card" data-theme="cat">
+          <div class="theme-preview cat-preview"></div>
+          <span>Cat</span>
+        </button>
+        <button class="theme-card" data-theme="fox">
+          <div class="theme-preview fox-preview"></div>
+          <span>Fox</span>
+        </button>
+        <button class="theme-card" data-theme="crystal">
+          <div class="theme-preview crystal-preview"></div>
+          <span>Crystal</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- Garden Stage -->
+      <div class="garden-stage" id="garden-stage">
+        <div class="garden-sky"></div>
+        <div class="garden-ground"></div>
+        <div class="garden-entity" id="garden-entity">
+          <!-- Injected by garden.js -->
+        </div>
+        <div class="growth-label" id="growth-label">Seed 🌱</div>
+        <div class="xp-bar-wrap">
+          <div class="xp-bar" id="xp-bar" style="width:0%"></div>
+        </div>
+      </div>
+
+      <!-- Timer Section -->
+      <div class="timer-section">
+
+        <!-- Mode Tabs -->
+        <div class="mode-tabs">
+          <button class="mode-tab active" data-mode="focus">Focus</button>
+          <button class="mode-tab" data-mode="short">Short Break</button>
+          <button class="mode-tab" data-mode="long">Long Break</button>
+        </div>
+
+        <!-- Clock -->
+        <div class="clock-wrap">
+          <svg class="clock-ring" viewBox="0 0 220 220">
+            <circle class="ring-track" cx="110" cy="110" r="96" />
+            <circle class="ring-progress" id="ring-progress" cx="110" cy="110" r="96"
+              stroke-dasharray="603" stroke-dashoffset="0" />
+          </svg>
+          <div class="clock-face">
+            <div class="clock-time" id="clock-display">25:00</div>
+            <div class="clock-mode-label" id="clock-mode-label">Focus Time</div>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="timer-controls">
+          <button class="btn-icon ctrl-btn" id="btn-reset" title="Reset">↺</button>
+          <button class="btn-primary start-btn" id="btn-start">Start</button>
+          <button class="btn-icon ctrl-btn" id="btn-skip" title="Skip">⏭</button>
+        </div>
+
+        <!-- Session dots -->
+        <div class="session-dots" id="session-dots">
+          <!-- filled by timer.js -->
+        </div>
+
+      </div>
+    </main>
+
+    <!-- Stats Bar -->
+    <footer class="stats-bar">
+      <div class="stat">
+        <span class="stat-value" id="stat-sessions">0</span>
+        <span class="stat-label">Sessions</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value" id="stat-minutes">0</span>
+        <span class="stat-label">Minutes Focused</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value" id="stat-streak">0</span>
+        <span class="stat-label">Day Streak 🔥</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value" id="stat-level">Seedling</span>
+        <span class="stat-label">Garden Level</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Toast Notifications -->
+  <div id="toast-container"></div>
+
+  <script src="js/app.js" type="module"></script>
+</body>
+</html>
