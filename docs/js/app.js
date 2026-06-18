@@ -250,32 +250,44 @@ function init() {
   themeCards.forEach(c => c.classList.toggle("active", c.dataset.theme === garden.theme));
 
   // ── Timer ──
+  let minutesThisSession = 0;  // track minutes credited during current session
+
   const timer = new PomodoroTimer({
     onTick(remaining, total) {
       clockDisplay.textContent = formatTime(remaining);
       document.title = `${formatTime(remaining)} — Bloomdoro`;
       ringProgress.style.strokeDashoffset = calcRingOffset(remaining, total);
+
+      // Grow garden every completed minute during focus
+      if (timer.mode === "focus" && timer.running) {
+        const elapsed = total - remaining;          // seconds elapsed
+        const minutesDone = Math.floor(elapsed / 60);
+        if (minutesDone > minutesThisSession) {
+          // A new minute just completed — grow by 1
+          minutesThisSession = minutesDone;
+          logMinutes(1);
+          garden.addMinutes(1);
+          refreshStats(garden);
+        }
+      }
     },
     onComplete({ type }) {
       if (type === "focus") {
-        const mins = timer.settings.focus_minutes;
-        // Log to daily record
-        const todayTotal = logMinutes(mins);
-        // Increment overall sessions counter
+        // Credit any remaining seconds as a final minute
+        const totalMins = timer.settings.focus_minutes;
+        const remaining = totalMins - minutesThisSession;
+        if (remaining > 0) { logMinutes(remaining); garden.addMinutes(remaining); }
+        minutesThisSession = 0;
+
         const prev = parseInt(localStorage.getItem(KEY_SESSIONS) || "0", 10);
         localStorage.setItem(KEY_SESSIONS, prev + 1);
-        // Grow garden
-        const leveled = garden.addMinutes(mins);
         refreshStats(garden);
         renderSessionDots(timer);
 
-        // Toast
+        const todayTotal = getTodayMinutes();
         const goal = getGoal();
-        if (todayTotal >= goal && todayTotal - mins < goal) {
-          // First time hitting goal today
+        if (todayTotal >= goal && todayTotal - totalMins < goal) {
           showToast("🎯 Daily goal reached! Amazing focus!", "success", 5000);
-        } else if (leveled) {
-          showToast("✨ Level Up! Your garden is growing!", "success");
         } else {
           showToast("🍅 Focus session done! Keep it up.", "success");
         }
@@ -306,11 +318,13 @@ function init() {
   });
   btnReset.addEventListener("click", () => {
     timer.reset();
+    minutesThisSession = 0;
     btnStart.textContent = "Start";
     timerSection.classList.remove("timer-running");
   });
   btnSkip.addEventListener("click", () => {
     timer.skipToNext();
+    minutesThisSession = 0;
     btnStart.textContent = "Start";
     timerSection.classList.remove("timer-running");
   });
