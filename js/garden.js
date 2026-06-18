@@ -145,9 +145,15 @@ export class Garden {
 // ════════════════════════════════════════════
 
 function buildFlower(level) {
+  if (level === 0) return `
+    <div class="flower-entity flower-stage-0" style="position:relative;display:flex;flex-direction:column;align-items:center;">
+      <div style="font-size:2.2rem;animation:sway 3s ease-in-out infinite;">🌱</div>
+      <div class="flower-stem" style="height:20px;"></div>
+    </div>`;
+
   const petalCount = [0, 5, 6, 7, 8][level];
   const petalSize  = [0, 14, 20, 26, 32][level];
-  const stemH      = [20, 60, 90, 120, 150][level];
+  const stemH      = [0, 60, 90, 120, 150][level];
 
   let petals = "";
   for (let i = 0; i < petalCount; i++) {
@@ -170,6 +176,7 @@ function buildFlower(level) {
 }
 
 function buildTree(level) {
+  if (level === 0) return `<div class="tree-entity tree-stage-0" style="display:flex;flex-direction:column;align-items:center;"><div style="font-size:2.2rem;animation:sway 3s ease-in-out infinite;">🌱</div></div>`;
   const trunkW = [8, 12, 16, 20, 26][level];
   const trunkH = [24, 60, 90, 120, 155][level];
   const f1W    = [20, 55, 90, 120, 160][level];
@@ -188,6 +195,7 @@ function buildTree(level) {
 }
 
 function buildCactus(level) {
+  if (level === 0) return `<div class="cactus-entity cactus-stage-0" style="display:flex;flex-direction:column;align-items:center;"><div style="font-size:2rem;animation:sway 4s ease-in-out infinite;">🪨</div></div>`;
   const bW = [18, 26, 34, 44, 56][level];
   const bH = [28, 60, 90, 120, 155][level];
   const aW = [0, 18, 28, 38, 50][level];
@@ -207,6 +215,7 @@ function buildCactus(level) {
 }
 
 function buildCat(level) {
+  if (level === 0) return `<div class="cat-entity cat-stage-0" style="display:flex;flex-direction:column;align-items:center;"><div style="font-size:2.4rem;animation:sway 2.5s ease-in-out infinite;">🐾</div></div>`;
   const bW = [30, 50, 70, 90, 110][level];
   const bH = [24, 40, 55, 72, 88][level];
   const hW = [28, 46, 64, 82, 100][level];
@@ -229,6 +238,7 @@ function buildCat(level) {
 }
 
 function buildFox(level) {
+  if (level === 0) return `<div class="fox-entity fox-stage-0" style="display:flex;flex-direction:column;align-items:center;"><div style="font-size:2.2rem;animation:sway 3s ease-in-out infinite;">🦊</div></div>`;
   const bW = [28, 48, 68, 88, 108][level];
   const bH = [22, 38, 54, 70, 86][level];
   const hW = [26, 44, 62, 80, 98][level];
@@ -251,6 +261,7 @@ function buildFox(level) {
 }
 
 function buildCrystal(level) {
+  if (level === 0) return `<div class="crystal-entity crystal-stage-0" style="display:flex;flex-direction:column;align-items:center;"><div style="font-size:2rem;animation:sway 4s ease-in-out infinite;">💠</div></div>`;
   const counts = [1, 2, 3, 4, 5];
   const n = counts[level];
   let shards = "";
