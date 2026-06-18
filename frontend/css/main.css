@@ -682,11 +682,101 @@ input { font-family: inherit; }
 .toast.warning { border-left: 3px solid var(--amber); }
 
 /* ════════════════════════════════
-   SVG GRADIENT DEFINITION
+   GOOGLE LOGIN / USER PILL
 ════════════════════════════════ */
-body::before {
-  content: '';
-  display: none;
+.auth-area { display: flex; align-items: center; }
+
+.btn-google {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #fff;
+  color: #3c4043;
+  border-radius: var(--radius-pill);
+  font-size: 0.82rem;
+  font-weight: 600;
+  border: 1px solid #dadce0;
+  transition: all var(--transition);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+.btn-google:hover {
+  background: #f8f9fa;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  transform: translateY(-1px);
+}
+
+.user-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-pill);
+  padding: 5px 12px 5px 5px;
+}
+.user-avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--violet);
+}
+.user-name {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  max-width: 110px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.btn-logout {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  background: none;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: color var(--transition);
+}
+.btn-logout:hover { color: var(--coral); }
+
+/* ════════════════════════════════
+   SPOTIFY SETUP MODAL extras
+════════════════════════════════ */
+.setup-intro {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.setup-steps {
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.setup-steps strong { color: var(--text-primary); }
+.setup-steps em     { color: var(--violet-light); }
+.env-box {
+  margin-top: 8px;
+  background: var(--bg-3);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.env-box code {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  color: var(--emerald-light);
+}
+.modal-footer a.btn-primary {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
 }
 
 /* ════════════════════════════════
